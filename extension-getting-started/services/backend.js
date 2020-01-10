@@ -75,7 +75,7 @@ const server = new Hapi.Server(serverOptions);
     path: '/color/query',
     handler: colorQueryHandler
   });
-
+    
   server.route({
       method: 'POST',
       path: '/color/test',
@@ -156,6 +156,13 @@ function colorQueryHandler (req) {
 }
 
 function testHandler (req) {
-    console.log(req.payload.input);
-    return req.payload.input;
+    const payload = verifyAndDecode(req.headers.authorization);
+//    twitch.
+//    twitch.rig.log("wtwtfwtwfwtwfwtwf")
+//    twitch.rig.log("This is on the server's side, The payload data is: " + payload.data)
+//    return "This is on the server's side, the payload data is" + payload.data.
+    const { channel_id: channelId, opaque_user_id: opaqueUserId } = payload;
+    const currentColor = color(channelColors[channelId] || initialColor).hex();
+    verboseLog(STRINGS.sendColor, currentColor, opaqueUserId);
+    return currentColor;
 }
